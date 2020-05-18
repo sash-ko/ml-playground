@@ -1,0 +1,1 @@
+Implementation of [Social Distancing Detection Tool](https://www.analyticsvidhya.com/blog/2020/05/social-distancing-detection-tool-deep-learning) using [Detectron 2](https://github.com/facebookresearch/detectron2) for object detection and segmentation.
