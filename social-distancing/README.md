@@ -1,4 +1,4 @@
-[Social distancing detection tool](https://www.analyticsvidhya.com/blog/2020/05/social-distancing-detection-tool-deep-learning/)
+[Social distancing detection](https://www.analyticsvidhya.com/blog/2020/05/social-distancing-detection-tool-deep-learning/)
 
 <img src="./images/distancing.png" width="40%" align="right">
 

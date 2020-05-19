@@ -1,5 +1,5 @@
-Machine learning fun stuff 
+## Fun machine learning stuff
 
-[Social distancing experiments](./social_distancing/)
+* [Social distancing detection](./social-distancing/)
 
-<img src="./social_distancing/images/distancing.png" width="35%" align="left">
+<img src="./social-distancing/images/distancing.png" width="35%" align="left">
