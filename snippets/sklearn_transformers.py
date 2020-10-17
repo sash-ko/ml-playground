@@ -1,4 +1,3 @@
-from operator import lshift
 from typing import List
 
 import numpy as np
@@ -11,6 +10,7 @@ from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline, make_union, make_pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import mean_squared_error
 
 
 def get_date_feature(df: pd.DataFrame, op: str, date_col: str) -> np.ndarray:
@@ -41,7 +41,8 @@ def create_simple_pipeline(
 
     # numerical date features
     transform_date_features = make_pipeline(
-        FunctionTransformer(get_date_feature, kw_args={'op': 'day', 'date_col': date_col}))
+        FunctionTransformer(get_date_feature, kw_args={
+                            'op': 'day', 'date_col': date_col}))
 
     # pass selected columns without any changes
     transform_passthrough = make_column_transformer(
@@ -58,9 +59,13 @@ def create_simple_pipeline(
     )
 
     regressor = lgb.LGBMRegressor(**fit_params)
+
+    # apply log transformation to the target variable
     regressor = TransformedTargetRegressor(
         regressor, func=np.log1p, inverse_func=np.exp
     )
+
+    # combine feature transformers and regressor in one pipeline
     return make_pipeline(transform_features, regressor)
 
 
@@ -75,27 +80,32 @@ def make_prediction(
 
     X_train, X_test, y_train, y_test = train_test_split(df, y)
 
+    # pass additional parameters to model fit
     fit_params = {}
     if sample_weight_col:
+        # 'transformedtargetregressor' is the name
+        # of the last step of the pipeline generated automatically
         fit_params['transformedtargetregressor__sample_weight'] = X_train[sample_weight_col]
 
     pipeline = create_simple_pipeline(cat_features, passthrough, date_col)
-    pipeline.fit(X_train, y_train, **fit_params)
 
+    pipeline.fit(X_train, y_train, **fit_params)
     y_pred = pipeline.predict(X_test)
 
-    return y_pred
+    print('MSE:', mean_squared_error(y_test, y_pred))
 
 
-# create random dataset
-df_data = pd.util.testing.makeMixedDataFrame()
-cat_features = ['C']
-passthrough = ['B']
-date_col = 'D'
-sample_weight_col = 'A'
+if __name__ == "__main__":
 
-# create random target
-y = np.random.rand(len(df_data))
+    # create a fake dataset
+    df_data = pd.util.testing.makeMixedDataFrame()
 
+    cat_features = ['C']
+    passthrough = ['B']
+    date_col = 'D'
+    sample_weight_col = 'A'
 
-make_prediction(df_data, y, cat_features, passthrough, date_col, sample_weight_col)
+    # create a random target
+    y = np.random.rand(len(df_data))
+
+    make_prediction(df_data, y, cat_features, passthrough, date_col, sample_weight_col)
