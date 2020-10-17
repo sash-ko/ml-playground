@@ -12,8 +12,7 @@ import lightgbm as lgb
 from sklearn.compose import TransformedTargetRegressor
 from sklearn.compose import make_column_transformer
 from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.pipeline import make_pipeline, make_union
+from sklearn.pipeline import make_pipeline, make_union, Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
