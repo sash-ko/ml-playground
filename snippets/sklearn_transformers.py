@@ -1,3 +1,8 @@
+"""
+The example shows how to create a prediction pipeline using building
+blocks provided by sklearn - transformers and pipelines
+"""
+
 from typing import List
 
 import numpy as np
@@ -5,11 +10,11 @@ import pandas as pd
 import lightgbm as lgb
 
 from sklearn.compose import TransformedTargetRegressor
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 from sklearn.compose import make_column_transformer
-from sklearn.pipeline import make_pipeline, make_union, make_pipeline
-from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 from sklearn.pipeline import Pipeline
+from sklearn.pipeline import make_pipeline, make_union
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 
