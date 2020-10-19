@@ -73,6 +73,25 @@ def create_simple_pipeline(
     return make_pipeline(transform_features, regressor)
 
 
+def get_feature_names(pipeline: Pipeline) -> List:
+    """Extract feature names from a pipeline"""
+    
+    names = []
+    
+    if hasattr(pipeline, 'steps'):
+        for step in pipeline.steps:
+            names.extend(get_feature_names(step[1]))
+            
+    elif hasattr(pipeline, 'transformer_list'):
+        for tr in pipeline.transformer_list:
+            names.extend(get_feature_names(tr[1]))
+            
+    elif hasattr(pipeline, 'get_feature_names'):
+        names.extend(pipeline.get_feature_names())
+        
+    return names
+
+
 def make_prediction(
         df: pd.DataFrame,
         y: pd.Series,
@@ -94,8 +113,10 @@ def make_prediction(
     pipeline = create_simple_pipeline(cat_features, passthrough, date_col)
 
     pipeline.fit(X_train, y_train, **fit_params)
+    
+    print(f'Features: {get_feature_names(pipeline)}')
+    
     y_pred = pipeline.predict(X_test)
-
     print('MSE:', mean_squared_error(y_test, y_pred))
 
 
