@@ -17,9 +17,28 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
 
-def get_date_feature(df: pd.DataFrame, op: str, date_col: str) -> np.ndarray:
-    """Extracts date related features from date column"""
-    return getattr(df[date_col].dt, op).values.reshape(-1, 1)
+def get_date_feature(df: pd.DataFrame, dt_prop: str, date_col: str) -> np.ndarray:
+    """Extracts date related features from a datetime column
+
+    Parameters
+    ----------
+
+    df: pd.DataFrame
+        Data set with a datetime column
+
+    dt_prop: str
+        Name of a date field property, e.g. "weekofyear", "month"
+
+    date_col: str
+        Name of a datetime column
+
+    Returns
+    -------
+
+    feature: np.ndarray
+    """
+    feature = getattr(df[date_col].dt, dt_prop).values.reshape(-1, 1)
+    return feature
 
 
 def create_simple_pipeline(
